@@ -5,6 +5,6 @@ demo-config:
   param1: some param 1
   not-required-param: not required param
   sub-config:
-    sub_config_param1: VALUE1
-#    sub_config_not_required_param: sub not required param
+    sub-config-param1: value1
+    sub-config-not-required-param: sub not required param
 
