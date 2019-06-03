@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+demo-config:
+  param1: some param 1
+  not-required-param: not required param
+  sub-config:
+    sub_config_param1: VALUE1
+#    sub_config_not_required_param: sub not required param
+
