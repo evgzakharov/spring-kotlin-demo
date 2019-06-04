@@ -56,6 +56,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$kotlinCoroutinesVersion"
+//    compile "io.projectreactor.kotlin:reactor-kotlin-extensions:1.0.0.M1"
 
     implementation "org.springframework.boot:spring-boot-starter-webflux"
 
