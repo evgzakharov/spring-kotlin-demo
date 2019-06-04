@@ -58,7 +58,7 @@ class PaymentController(
 
         val toCardInfo = cardsInfo[paymentRequest.cardIdTo] ?: run {
             response.statusCode = HttpStatus.BAD_REQUEST
-            return ErrorResponse("card with id='${paymentRequest.cardIdFrom}' not found")
+            return ErrorResponse("card with id='${paymentRequest.cardIdTo}' not found")
         }
 
         listOf(fromCardInfo, toCardInfo)
