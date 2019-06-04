@@ -1,0 +1,13 @@
+apply plugin: 'idea'
+
+group = "demo-kotlin-application"
+version = "0.0.1"
+
+subprojects {
+    idea {
+        project {
+            jdkName = '1.8'
+            languageLevel = '1.8'
+        }
+    }
+}

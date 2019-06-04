@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 data class Card(
@@ -17,14 +16,14 @@ data class Card(
 class AuthController(
 ) {
     private val cards: Map<String, Card> = listOf(
-        Card(1L, "5559 **** 3478", "03/21"),
-        Card(2L, "5559 **** 2020", "03/21"),
-        Card(3L, "5559 **** 4509", "03/21")
+        Card(1L, "55593478", "03/21"),
+        Card(2L, "55592020", "03/21"),
+        Card(3L, "55594509", "03/21")
     ).associateBy { it.cardNumber }
 
-    @GetMapping
+    @GetMapping(value = ["{cardNumber}"])
     fun info(
-        @RequestBody cardNumber: String,
+        @PathVariable("cardNumber") cardNumber: String,
         response: ServerHttpResponse
     ): Response {
         val card = cards[cardNumber] ?: run {

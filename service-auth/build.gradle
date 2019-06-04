@@ -26,8 +26,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-group = "demo-kotlin-application"
-version = "1.0.0-SNAPSHOT"
+sourceCompatibility = 1.8
 
 repositories {
     jcenter()

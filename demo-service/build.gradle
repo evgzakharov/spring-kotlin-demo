@@ -22,8 +22,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-group = "demo-kotlin-application"
-version = "1.0.0-SNAPSHOT"
+sourceCompatibility = 1.8
 
 repositories {
     jcenter()
@@ -51,6 +50,8 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
 
     kapt "org.springframework.boot:spring-boot-configuration-processor"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 compileKotlin.dependsOn(processResources)
