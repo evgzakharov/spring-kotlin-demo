@@ -7,6 +7,7 @@ data class ForbiddenResponse (
 ): Response
 
 data class AuthResponse(
+    val userId: Long,
     val cardAccess: Boolean = false,
     val paymentAccess: Boolean = false,
     val userAccess: Boolean = false

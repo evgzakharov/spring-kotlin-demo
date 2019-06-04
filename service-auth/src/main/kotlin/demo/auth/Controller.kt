@@ -11,10 +11,10 @@ import kotlin.random.Random
 class AuthController(
     val authConfig: AuthConfig
 ) {
-    private val successTokens = setOf(
-        "auth-token1",
-        "auth-token2",
-        "auth-token3"
+    private val userTokens = mapOf(
+        "auth-token1" to 1L,
+        "auth-token2" to 2L,
+        "auth-token3" to 3L
     )
 
     @GetMapping(value = ["{token}"])
@@ -22,7 +22,7 @@ class AuthController(
         @PathVariable(name = "token") token: String,
         response: ServerHttpResponse
     ): Response {
-        if (token !in successTokens) {
+        val userId = userTokens[token] ?: run {
             response.statusCode = HttpStatus.FORBIDDEN
             return ForbiddenResponse(
                 error = "access is forbidden for token='$token' (token not find)"
@@ -30,6 +30,7 @@ class AuthController(
         }
 
         return AuthResponse(
+            userId = userId,
             cardAccess = Random.nextDouble() <= authConfig.successRate,
             paymentAccess = Random.nextDouble() <= authConfig.successRate,
             userAccess = Random.nextDouble() <= authConfig.successRate
