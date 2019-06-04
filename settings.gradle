@@ -1,1 +1,8 @@
+include ":demo-service"
+
+include ":service-auth"
+include ":service-card"
+include ":service-payment"
+include ":service-user"
+
 rootProject.name = 'spring-kotlin-demo'

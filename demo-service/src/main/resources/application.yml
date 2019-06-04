@@ -7,4 +7,3 @@ demo-config:
   sub-config:
     sub-config-param1: value1
     sub-config-not-required-param: sub not required param
-

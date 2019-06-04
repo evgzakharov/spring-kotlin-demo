@@ -1,4 +1,4 @@
-package demo.types
+package demo
 
 interface Response {
     val status: Boolean

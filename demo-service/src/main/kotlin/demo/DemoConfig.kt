@@ -1,4 +1,4 @@
-package demo.confing
+package demo
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import javax.annotation.PostConstruct
