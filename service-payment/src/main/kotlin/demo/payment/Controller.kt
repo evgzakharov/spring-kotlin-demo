@@ -46,7 +46,7 @@ class PaymentController(
         @RequestBody paymentRequest: PaymentRequest,
         response: ServerHttpResponse
     ): Response {
-        if (paymentRequest.cardIdFrom.equals(paymentRequest.cardIdTo)) {
+        if (paymentRequest.cardIdFrom == paymentRequest.cardIdTo) {
             response.statusCode = HttpStatus.BAD_REQUEST
             return ErrorResponse("card id same")
         }
