@@ -14,7 +14,7 @@ class DemoController(
     private val demoConfig: DemoConfig
 ) {
     @PostMapping
-    fun processRequest(@RequestBody serviceRequest: Mono<ServiceRequest>): Mono<Response> {
+    fun processRequest(@RequestBody serviceRequest: ServiceRequest): Response {
         val cacheRequest = serviceRequest.cache()
             .publishOn(Schedulers.parallel())
 
