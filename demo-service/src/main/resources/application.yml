@@ -1,9 +1,9 @@
 server:
   port: 8080
 
-demo-config:
-  param1: some param 1
-  not-required-param: not required param
-  sub-config:
-    sub-config-param1: value1
-    sub-config-not-required-param: sub not required param
+url:
+  auth: http://localhost:8081
+  card: http://localhost:8082
+  payment: http://localhost:8083
+  user: http://localhost:8084
+

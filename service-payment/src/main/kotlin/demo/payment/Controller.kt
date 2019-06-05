@@ -41,8 +41,13 @@ class PaymentController(
     ): Response {
         delay(paymentConfig.timeout)
 
+        val currentAmount = cardsInfo[cardId]?.amount ?: run {
+            response.statusCode = HttpStatus.BAD_REQUEST
+            return ErrorResponse("card with id='$cardId' not found")
+        }
+
         val transactions: List<TransactionInfo> = transactionHistory[cardId] ?: emptyList()
-        return TransactionResponse(transactions)
+        return PaymentTransactionResponse(currentAmount, transactions)
     }
 
     @PostMapping
@@ -93,7 +98,7 @@ class PaymentController(
             fromCardInfo.amount = newFromAmount
             toCardInfo.amount = newToAmount
 
-            return SuccessResponse()
+            return PaymentSuccessResponse()
         } finally {
             listOf(fromCardInfo, toCardInfo)
                 .forEach { ignoreError { it.cardMutex.unlock() } }

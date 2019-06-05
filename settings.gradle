@@ -1,3 +1,4 @@
+include ":demo"
 include ":demo-service"
 
 include ":service-auth"
