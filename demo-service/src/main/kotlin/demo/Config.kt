@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.validation.annotation.Validated
 import javax.annotation.PostConstruct
 
-@Configuration
 @ConfigurationProperties(prefix = "url")
 @Validated
 class DemoConfig {
