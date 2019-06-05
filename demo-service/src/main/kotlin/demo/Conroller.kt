@@ -15,23 +15,17 @@ class DemoController(
 
     @PostMapping
     fun processRequest(@RequestBody serviceRequest: ServiceRequest): Response {
-        val authInfo = getAuthInfo(serviceRequest.authToken)
+        //1) get auth info from service by token -> userId
 
-        val userInfo = findUser(authInfo.userId)
+        //2) find user info by userId from 1.
 
-        val cardFromInfo = findCardInfo(serviceRequest.cardFrom)
-        val cardToInfo = findCardInfo(serviceRequest.cardTo)
+        //3) 4) find cards info for each card in serviceRequest
 
-        sendMoney(cardFromInfo.cardId, cardToInfo.cardId, serviceRequest.amount)
+        // 5) make transaction for known cards by calling sendMoney(id1, id2, amount)
 
-        val paymentInfo = getPaymentInfo(cardFromInfo.cardId)
+        // 6) after payment get payment info by fromCardId
 
-        return SuccessResponse(
-            amount = paymentInfo.currentAmount,
-            userName = userInfo.name,
-            userSurname = userInfo.surname,
-            userAge = userInfo.age
-        )
+        TODO("return SuccessResponse")
     }
 
     private fun getPaymentInfo(cardId: Long): PaymentTransactionInfo {
