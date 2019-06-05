@@ -1,5 +1,6 @@
 package demo.auth
 
+import kotlinx.coroutines.delay
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,10 +19,12 @@ class AuthController(
     )
 
     @GetMapping(value = ["{token}"])
-    fun info(
+    suspend fun info(
         @PathVariable(name = "token") token: String,
         response: ServerHttpResponse
     ): Response {
+        delay(authConfig.timeout)
+
         val userId = userTokens[token] ?: run {
             response.statusCode = HttpStatus.FORBIDDEN
             return ForbiddenResponse(

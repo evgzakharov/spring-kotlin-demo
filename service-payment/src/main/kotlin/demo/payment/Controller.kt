@@ -1,5 +1,6 @@
 package demo.payment
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
@@ -21,6 +22,7 @@ data class CardInfo(
 
 @RestController
 class PaymentController(
+    private val paymentConfig: PaymentConfig
 ) {
     val cardsInfo = ConcurrentHashMap<Long, CardInfo>(
         mapOf(
@@ -33,10 +35,12 @@ class PaymentController(
     val transactionHistory = ConcurrentHashMap<Long, MutableList<TransactionInfo>>()
 
     @GetMapping(value = ["{cardId}"])
-    fun info(
+    suspend fun info(
         @PathVariable("cardId") cardId: Long,
         response: ServerHttpResponse
     ): Response {
+        delay(paymentConfig.timeout)
+
         val transactions: List<TransactionInfo> = transactionHistory[cardId] ?: emptyList()
         return TransactionResponse(transactions)
     }
@@ -46,6 +50,8 @@ class PaymentController(
         @RequestBody paymentRequest: PaymentRequest,
         response: ServerHttpResponse
     ): Response {
+        delay(paymentConfig.timeout)
+
         if (paymentRequest.cardIdFrom == paymentRequest.cardIdTo) {
             response.statusCode = HttpStatus.BAD_REQUEST
             return ErrorResponse("card id same")
@@ -70,7 +76,6 @@ class PaymentController(
             if (newFromAmount.signum() == -1) {
                 response.statusCode = HttpStatus.BAD_REQUEST
                 return ErrorResponse("card with id='${paymentRequest.cardIdFrom}' doesn't have money to send '${paymentRequest.amount}' to another card")
-
             }
 
             val newToAmount = toCardInfo.amount + paymentRequest.amount

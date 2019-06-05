@@ -1,9 +1,8 @@
-package demo.auth
+package demo.card
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties
-data class AuthConfig(
-    val successRate: Double,
+data class CardConfig(
     val timeout: Long
 )

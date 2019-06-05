@@ -1,9 +1,8 @@
-package demo.auth
+package demo.payment
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties
-data class AuthConfig(
-    val successRate: Double,
+data class PaymentConfig(
     val timeout: Long
 )

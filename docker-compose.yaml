@@ -1,0 +1,27 @@
+version: '3'
+services:
+  service-auth:
+    image: service-auth:1.0.0
+    environment:
+      - SUCCESS_RATE=1.0
+      - TIMEOUT=100
+    ports:
+      - "8081:8080"
+  service-card:
+    image: service-card:1.0.0
+    environment:
+      - TIMEOUT=100
+    ports:
+      - "8082:8080"
+  service-payment:
+    image: service-payment:1.0.0
+    environment:
+      - TIMEOUT=100
+    ports:
+      - "8083:8080"
+  service-user:
+    image: service-user:1.0.0
+    environment:
+      - TIMEOUT=100
+    ports:
+      - "8084:8080"

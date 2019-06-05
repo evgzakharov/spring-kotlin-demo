@@ -1,5 +1,6 @@
 package demo.card
 
+import kotlinx.coroutines.delay
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,6 +16,7 @@ data class User(
 
 @RestController
 class UserController(
+    private val cardConfig: CardConfig
 ) {
     val users = mapOf(
         1L to User("Vasia", "Pupkin", 18),
@@ -23,10 +25,12 @@ class UserController(
     )
 
     @GetMapping(value = ["{id}"])
-    fun info(
+    suspend fun info(
         @PathVariable("id") userId: Long,
         response: ServerHttpResponse
     ): Response {
+        delay(cardConfig.timeout)
+
         val user = users[userId] ?: run {
             response.statusCode = HttpStatus.NOT_FOUND
             return NotFoundResponse(
