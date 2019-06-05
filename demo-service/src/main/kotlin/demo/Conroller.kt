@@ -16,9 +16,8 @@ class DemoController(
 
     @PostMapping
     fun processRequest(@RequestBody serviceRequest: ServiceRequest): Response {
-        val authInfo = getAuthInfo(serviceRequest.authToken)
-
-        val userInfoFuture = CompletableFuture.supplyAsync { findUser(authInfo.userId) }
+        val authInfoFuture = CompletableFuture.supplyAsync {  getAuthInfo(serviceRequest.authToken) }
+        val userInfoFuture = authInfoFuture.thenApplyAsync { findUser(it.userId) }
 
         val cardFromInfo = CompletableFuture.supplyAsync { findCardInfo(serviceRequest.cardFrom) }
         val cardToInfo = CompletableFuture.supplyAsync { findCardInfo(serviceRequest.cardTo) }
