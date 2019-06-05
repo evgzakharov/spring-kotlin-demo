@@ -1,11 +1,13 @@
 package demo
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.reactive.awaitFirst
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
-import reactor.core.scheduler.Schedulers
 import reactor.util.function.Tuple2
 import java.math.BigDecimal
 
@@ -14,37 +16,31 @@ class DemoController(
     private val demoConfig: DemoConfig
 ) {
     @PostMapping
-    fun processRequest(@RequestBody serviceRequest: ServiceRequest): Response {
-        val cacheRequest = serviceRequest.cache()
-            .publishOn(Schedulers.parallel())
-
-        val userInfoMono = cacheRequest.flatMap {
-            getAuthInfo(it.authToken)
-        }.flatMap {
-            findUser(it.userId)
+    suspend fun processRequest(@RequestBody serviceRequest: ServiceRequest): Response = coroutineScope {
+        val userInfoDeferred = async {
+            val authInfo = getAuthInfo(serviceRequest.authToken).awaitFirst()
+            findUser(authInfo.userId).awaitFirst()
         }
 
-        val cardFromInfoMono = cacheRequest.flatMap { findCardInfo(it.cardFrom) }
-        val cardToInfoMono = cacheRequest.flatMap { findCardInfo(it.cardTo) }
+        val paymentInfoDeferred = async {
+            val cardFromInfoDeferred = async { findCardInfo(serviceRequest.cardFrom).awaitFirst() }
+            val cardToInfoDeferred = async { findCardInfo(serviceRequest.cardTo).awaitFirst() }
 
-        val paymentInfoMono = cardFromInfoMono.zipWith(cardToInfoMono)
-            .flatMap { (cardFromInfo, cardToInfo) ->
-                cacheRequest.flatMap { request ->
-                    sendMoney(cardFromInfo.cardId, cardToInfo.cardId, request.amount).map { cardFromInfo }
-                }
-            }.flatMap {
-                getPaymentInfo(it.cardId)
-            }
+            val cardFromInfo = cardFromInfoDeferred.await()
+            sendMoney(cardFromInfo.cardId, cardToInfoDeferred.await().cardId, serviceRequest.amount).awaitFirst()
 
-        return userInfoMono.zipWith(paymentInfoMono)
-            .map { (userInfo, paymentInfo) ->
-                SuccessResponse(
-                    amount = paymentInfo.currentAmount,
-                    userName = userInfo.name,
-                    userSurname = userInfo.surname,
-                    userAge = userInfo.age
-                )
-            }
+            getPaymentInfo(cardFromInfo.cardId).awaitFirst()
+        }
+
+        val userInfo = userInfoDeferred.await()
+        val paymentInfo = paymentInfoDeferred.await()
+
+        SuccessResponse(
+            amount = paymentInfo.currentAmount,
+            userName = userInfo.name,
+            userSurname = userInfo.surname,
+            userAge = userInfo.age
+        )
     }
 
     private fun getPaymentInfo(cardId: Long): Mono<PaymentTransactionInfo> {
