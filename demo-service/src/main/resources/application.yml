@@ -6,4 +6,5 @@ url:
   card: http://localhost:8082
   payment: http://localhost:8083
   user: http://localhost:8084
+  testDigit: aaa
 
